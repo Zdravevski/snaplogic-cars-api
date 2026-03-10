@@ -1,0 +1,138 @@
+openapi: 3.0.3
+info:
+  title: Cars Information API
+  description: API for retrieving car model information with interesting facts, pros/cons, and video reviews.
+  version: 1.0.0
+
+servers:
+  - url: https://10.0.0.141:8081
+    description: Local API Gateway
+
+paths:
+  /gateway/slavkos-api/cars:
+    get:
+      summary: Search car models
+      description: Returns car information filtered by optional query parameters.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: brand
+          in: query
+          description: Brand of the car
+          required: false
+          schema:
+            type: string
+          example: Audi
+
+        - name: model
+          in: query
+          description: Model name
+          required: false
+          schema:
+            type: string
+          example: A4
+
+        - name: type
+          in: query
+          description: Vehicle type
+          required: false
+          schema:
+            type: string
+          example: Luxury Sedan
+
+        - name: yearIntroduced
+          in: query
+          description: Year the model was introduced
+          required: false
+          schema:
+            type: integer
+          example: 1994
+
+      responses:
+        '200':
+          description: List of car models matching the filters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Car'
+
+        '401':
+          description: Unauthorized – invalid or missing bearer token
+
+        '500':
+          description: Internal server error
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+
+  schemas:
+    Car:
+      type: object
+      properties:
+        id:
+          type: string
+          example: audi_a4
+
+        brand:
+          type: string
+          example: Audi
+
+        model:
+          type: string
+          example: A4
+
+        type:
+          type: string
+          example: Luxury Sedan
+
+        yearIntroduced:
+          type: integer
+          example: 1994
+
+        description:
+          type: string
+          example: The Audi A4 is a refined luxury sedan known for its clean design and advanced AWD system.
+
+        fuelEconomy:
+          type: string
+          example: 24-34 MPG
+
+        pros:
+          type: array
+          items:
+            type: string
+          example:
+            - Premium interior quality
+            - Quattro AWD system
+            - Smooth ride
+
+        cons:
+          type: array
+          items:
+            type: string
+          example:
+            - Higher repair costs
+            - Options can get expensive
+
+        buyerProfile:
+          type: string
+          example: Professionals, luxury sedan buyers
+
+        interestingFacts:
+          type: array
+          items:
+            type: string
+          example:
+            - Quattro AWD system is one of the most respected in the industry
+            - Very popular among European executives
+
+        youtubeReview:
+          type: string
+          format: uri
+          example: https://www.youtube.com/watch?v=H6W8XQdQ5bQ
